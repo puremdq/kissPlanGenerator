@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app version="2.4"
+         xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+
+    <!--编码过滤器-->
+    <filter>
+        <filter-name>characterEncodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>characterEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <!--end 编码过滤器-->
+
+
+    <filter>
+        <filter-name>shiroFilter</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <init-param>
+            <param-name>targetFilterLifecycle</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>shiroFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
+    <!--start spring context-->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:context/application-context.xml</param-value>
+    </context-param>
+    <listener>
+        <listener-class><!--用于加载spring配置文件-->
+            org.springframework.web.context.ContextLoaderListener
+        </listener-class>
+    </listener>
+    <!--end spring context-->
+
+
+
+    <!-- DispatcherServlet, Spring MVC的核心 -->
+    <servlet>
+        <servlet-name>springmvc-dispatcher</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <!-- DispatcherServlet对应的上下文配置， 默认为/WEB-INF/$servlet-name$-servlet.xml
+         -->
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:/context/springmvc-context.xml</param-value>
+        </init-param>
+
+
+        <!--
+            load-on-startup元素标记容器是否在启动的时候就加载这个servlet(实例化并调用其init()方法)。
+            它的值必须是一个整数，表示servlet应该被载入的顺序
+            当值为0或者大于0时，表示容器在应用启动时就加载并初始化这个servlet；
+            当值小于0或者没有指定时，则表示容器在该servlet被选择时才会去加载。
+            正数的值越小，该servlet的优先级越高，应用启动时就越先加载。
+            当值相同时，容器就会自己选择顺序来加载。
+       -->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>springmvc-dispatcher</servlet-name>
+        <!-- mvc-dispatcher拦截所有的请求-->
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+
+</web-app>
+        
